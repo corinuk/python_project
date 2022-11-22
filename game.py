@@ -14,6 +14,8 @@ player = pygame.image.load("Player.png")
 player = pygame.transform.scale(player, (SCREEN_WIDTH//52, SCREEN_WIDTH//52))
 tower1 = pygame.image.load("test.png")
 tower1 = pygame.transform.scale(tower1, (SCREEN_WIDTH//26, SCREEN_WIDTH//26))
+top = pygame.image.load("top.png")
+top = pygame.transform.scale(top, (SCREEN_WIDTH//26, SCREEN_WIDTH//26))
 one_pair = pygame.image.load("one_pair.png")
 one_pair = pygame.transform.scale(one_pair, (SCREEN_WIDTH//26, SCREEN_WIDTH//26))
 two_pair = pygame.image.load("two_pair.png")
@@ -28,6 +30,20 @@ straight = pygame.image.load("straight.png")
 straight = pygame.transform.scale(straight, (SCREEN_WIDTH//26, SCREEN_WIDTH//26))
 mountain = pygame.image.load("mountain.png")
 mountain = pygame.transform.scale(mountain, (SCREEN_WIDTH//26, SCREEN_WIDTH//26))
+flush = pygame.image.load("flush.png")
+flush = pygame.transform.scale(flush, (SCREEN_WIDTH//26, SCREEN_WIDTH//26))
+straight_flush = pygame.image.load("straight_flush.png")
+straight_flush = pygame.transform.scale(straight_flush, (SCREEN_WIDTH//26, SCREEN_WIDTH//26))
+back_straight_flush = pygame.image.load("back_straight_flush.png")
+back_straight_flush = pygame.transform.scale(back_straight_flush, (SCREEN_WIDTH//26, SCREEN_WIDTH//26))
+royal_straight_flush = pygame.image.load("royal_straight_flush.png")
+royal_straight_flush = pygame.transform.scale(royal_straight_flush, (SCREEN_WIDTH//26, SCREEN_WIDTH//26))
+four_card = pygame.image.load("four_card.png")
+four_card = pygame.transform.scale(four_card, (SCREEN_WIDTH//26, SCREEN_WIDTH//26))
+five_card = pygame.image.load("five_card.png")
+five_card = pygame.transform.scale(five_card, (SCREEN_WIDTH//26, SCREEN_WIDTH//26))
+five_card_flush = pygame.image.load("five_card_flush.png")
+five_card_flush = pygame.transform.scale(five_card_flush, (SCREEN_WIDTH//26, SCREEN_WIDTH//26))
 building_complete = pygame.image.load("building_complete.png")
 building_complete = pygame.transform.scale(building_complete, (63, 38))
 card_back = pygame.image.load("card_back.png")
@@ -158,7 +174,7 @@ while playing:
                 if 26*j+13<=mouse_pos[0]<=26*j+39 and 26*i+13<=mouse_pos[1]<=26*i+39:
                     if step==1:
                         built_tower.pop()
-                    built_tower.append([i,j,0])
+                    built_tower.append([i,j,15])
                     tower_selected=[i,j]
                     step=1
                     break
@@ -276,7 +292,23 @@ while playing:
                     built_tower[-1][2]=14
                 step=4
     for i,j,k in built_tower:
-        if k==8:
+        if k==0:
+            SCREEN.blit(five_card_flush, [SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13])
+        elif k==1:
+            SCREEN.blit(five_card, [SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13])
+        elif k==2:
+            SCREEN.blit(four_card, [SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13])
+        elif k==3:
+            SCREEN.blit(royal_straight_flush, [SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13])
+        elif k==4:
+            SCREEN.blit(back_straight_flush, [SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13])
+        elif k==5:
+            SCREEN.blit(straight_flush, [SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13])
+        elif k==6:
+            SCREEN.blit(flush, [SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13])
+        elif k==7:
+            SCREEN.blit(mountain, [SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13])
+        elif k==8:
             SCREEN.blit(straight, [SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13])
         elif k==9:
             SCREEN.blit(back_straight, [SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13])
@@ -288,6 +320,8 @@ while playing:
             SCREEN.blit(two_pair, [SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13])
         elif k==13:
             SCREEN.blit(one_pair, [SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13])
+        elif k==14:
+            SCREEN.blit(top, [SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13])
         else:
             SCREEN.blit(tower1, [SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13])
     for i in range(5):
