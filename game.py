@@ -22,28 +22,47 @@ card_img, card_back = go.Cards()
 building_complete = go.Building_complete()
 road1 = go.Road()
 player = go.Player()
-player_Rect = player.rect()
-
+red = go.red_Ball()
+blue = go.blue_Ball()
+exp_1 = go.exp_1()
+exp_2 = go.exp_2()
+exp_3 = go.exp_3()
+exp_4 = go.exp_4()
+player_Rect = [player.rect() for i in range(15)]
 playing = True
 road, tower_available = Map()
 built_tower = []
-
-a = 0
+unit = []
+round = 1
 health = 10
 step = 0
 tower_selected = 0
 poker_rand = [0, 0, 0, 0, 0]
 poker_card = [[0, 0] for i in range(5)]
 changed = [0 for i in range(5)]
-
+delay = 0
+unit_count = 0
+unit_health = 5
+attack = 10
 while playing:
+    delay=(delay+1)%120
     SCREEN.fill((0, 0, 0))
     myFont = pygame.font.SysFont("arial", 18, True, False)
     text_Title = myFont.render("Life :"+str(health), True, 'RED')
     text_Rect = text_Title.get_rect()
     text_Rect.centerx = 40
     text_Rect.y = 0
+    text_Round = myFont.render("Round :"+str(round), True, 'BLUE')
+    round_Rect = text_Round.get_rect()
+    round_Rect.centerx = 40
+    round_Rect.y = 20
     SCREEN.blit(text_Title, text_Rect)
+    SCREEN.blit(text_Round, round_Rect)
+    for i in range(5):
+        if changed[i]:
+            red.show(26*i, 26*26)
+        else:
+            blue.show(26*i, 26*26)
     building_complete.show(613, 0)
     
     for i, j in road:
@@ -91,12 +110,15 @@ while playing:
             
             for idx, card in enumerate(cards):
                 if card:
-                    changed[idx] = 1
-                    poker_rand[idx] = random.randint(0, 31)//8
-                    shape_ = poker_rand[idx]
-                    number_ = poker_rand[idx]%8
-                    poker_card[idx][0] = shape_
-                    poker_card[idx][1] = number_
+                    while True:
+                        poker_rand[idx] = random.randint(0, 31)//8
+                        shape_ = poker_rand[idx]
+                        number_ = poker_rand[idx]%8
+                        if [shape_, number_] != poker_card[idx]:
+                            changed[idx] = 1
+                            poker_card[idx][0] = shape_
+                            poker_card[idx][1] = number_
+                            break
 
         if event.type == pygame.MOUSEBUTTONDOWN and step == 3:
             mouse_pos = pygame.mouse.get_pos()
@@ -126,8 +148,35 @@ while playing:
             card_front.show(CARD_X, CARD_Y)
             
     if step == 4:
-        a, player_Rect.x, player_Rect.y = move(a, player_Rect)
-        a, player_Rect.x, player_Rect.y, health = change_direction(a, player_Rect, SCREEN_WIDTH, health)
-        player.show(player_Rect.x, player_Rect.y)
+        if delay==1 and unit_count!=15:
+            unit.append([0,unit_count,attack])
+            unit_count+=1
+        for i in range(len(unit)):
+            if unit[i][2]<=0:
+                unit[i][0]=-1
+        for i in range(len(unit)):
+            if unit[i][0]!=-1:
+                unit[i][0], player_Rect[i].x, player_Rect[i].y = move(unit[i][0], player_Rect[i])
+                unit[i][0], player_Rect[i].x, player_Rect[i].y, health= change_direction(unit[i][0], player_Rect[i], SCREEN_WIDTH, health)
+                player.show(player_Rect[i].x, player_Rect[i].y)
+        for i,j,k in built_tower:
+            for l in range(len(unit)):
+                if (player_Rect[l].x!=SCREEN_WIDTH//26*10-1 or player_Rect[l].y!=0) and unit[l][0]!=-1 and ((player_Rect[l].x-19-j*26)-(player_Rect[l].y-19-i*26))**2<=40**2:
+                    unit[l][2]-=0.01
+                    exp_1.show(26*j+19+0*(player_Rect[l].x-19-26*j)//3,26*i+19+0*(player_Rect[l].y-19-26*i)//3)
+                    exp_2.show(26*j+19+1*(player_Rect[l].x-19-26*j)//3,26*i+19+1*(player_Rect[l].y-19-26*i)//3)
+                    exp_3.show(26*j+19+2*(player_Rect[l].x-19-26*j)//3,26*i+19+2*(player_Rect[l].y-19-26*i)//3)
+                    exp_4.show(26*j+19+3*(player_Rect[l].x-19-26*j)//3,26*i+19+3*(player_Rect[l].y-19-26*i)//3)
+                    break
+        if len(unit)==15 and sorted(unit,key=lambda x : -x[0])[0][0]==-1:
+            step=0
+            unit_count=0
+            unit=[]
+            poker_rand = [0, 0, 0, 0, 0]
+            poker_card = [[0, 0] for i in range(5)]
+            changed = [0 for i in range(5)]
+            player_Rect = [player.rect() for i in range(15)]
+            round+=1
+            unit_health*=1.15
     pygame.display.flip()
     clock.tick(120)

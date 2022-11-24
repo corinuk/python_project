@@ -94,3 +94,27 @@ def Road():
 def Player():
     player = Objects("Player.png", SCREEN_WIDTH//52, SCREEN_WIDTH//52)
     return player
+
+def red_Ball():
+    red_ball = Objects("red.png", SCREEN_WIDTH//52, SCREEN_WIDTH//52)
+    return red_ball
+
+def blue_Ball():
+    blue_ball = Objects("blue.png", SCREEN_WIDTH//52, SCREEN_WIDTH//52)
+    return blue_ball
+
+def exp_1():
+    exp_1 = Objects("exp_1.png", SCREEN_WIDTH//52, SCREEN_WIDTH//52)
+    return exp_1
+
+def exp_2():
+    exp_2 = Objects("exp_2.png", SCREEN_WIDTH//52, SCREEN_WIDTH//52)
+    return exp_2
+
+def exp_3():
+    exp_3 = Objects("exp_3.png", SCREEN_WIDTH//52, SCREEN_WIDTH//52)
+    return exp_3
+
+def exp_4():
+    exp_4 = Objects("exp_4.png", SCREEN_WIDTH//52, SCREEN_WIDTH//52)
+    return exp_4
