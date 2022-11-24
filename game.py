@@ -2,9 +2,10 @@ import pygame
 import random
 
 import game_objs as go
+import game_units as gu
 from game_map import Map
 from game_card_ranking import card_ranking
-from game_move_player import move, change_direction
+from game_startup import Startup_setting
 
 SCREEN_WIDTH = 26*26
 SCREEN_HEIGHT  = 32*26
@@ -17,53 +18,45 @@ clock = pygame.time.Clock()
 mouse = pygame.mouse.get_pos()
 click = pygame.mouse.get_pressed()
 
-Rankings_Tower, tower1 = go.Rankings()
+Rankings_Tower, tower1 = go.Towers()
 card_img, card_back = go.Cards()
-building_complete = go.Building_complete()
-road1 = go.Road()
-player = go.Player()
-red = go.red_Ball()
-blue = go.blue_Ball()
-exp_1 = go.exp_1()
-exp_2 = go.exp_2()
-exp_3 = go.exp_3()
-exp_4 = go.exp_4()
-player_Rect = [player.rect() for i in range(15)]
+
+building_complete, road1, player, red, blue = go.Create_Objs()
+
 playing = True
 road, tower_available = Map()
 built_tower = []
-unit = []
-round = 1
+
 health = 10
-step = 0
 tower_selected = 0
-poker_rand = [0, 0, 0, 0, 0]
-poker_card = [[0, 0] for i in range(5)]
-changed = [0 for i in range(5)]
 delay = 0
-unit_count = 0
-unit_health = 5
 attack = 10
+
+step, unit_count, unit, poker_rand, poker_card, changed, player_Rect = Startup_setting(player)
+level, unit_health = 1, 5
+unit_die_num = -1
+
 while playing:
-    delay=(delay+1)%120
+    delay = (delay + 1) % 120
     SCREEN.fill((0, 0, 0))
     myFont = pygame.font.SysFont("arial", 18, True, False)
     text_Title = myFont.render("Life :"+str(health), True, 'RED')
     text_Rect = text_Title.get_rect()
     text_Rect.centerx = 40
     text_Rect.y = 0
-    text_Round = myFont.render("Round :"+str(round), True, 'BLUE')
+    text_Round = myFont.render("Round :"+str(level), True, 'BLUE')
     round_Rect = text_Round.get_rect()
     round_Rect.centerx = 40
     round_Rect.y = 20
     SCREEN.blit(text_Title, text_Rect)
     SCREEN.blit(text_Round, round_Rect)
+    building_complete.show(613, 0)
+    
     for i in range(5):
         if changed[i]:
             red.show(26*i, 26*26)
         else:
             blue.show(26*i, 26*26)
-    building_complete.show(613, 0)
     
     for i, j in road:
         MAP_WIDTH, MAP_HEIGHT = SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13
@@ -107,7 +100,7 @@ while playing:
             card_4th = 404 <= mouse_pos[0] <= 508 and 702 <= mouse_pos[1] <= 808 and changed[3] == 0
             card_5th = 538 <= mouse_pos[0] <= 642 and 702 <= mouse_pos[1] <= 808 and changed[4] == 0
             cards = [card_1st, card_2nd, card_3rd, card_4th, card_5th]
-            
+
             for idx, card in enumerate(cards):
                 if card:
                     while True:
@@ -123,22 +116,17 @@ while playing:
         if event.type == pygame.MOUSEBUTTONDOWN and step == 3:
             mouse_pos = pygame.mouse.get_pos()
             if 613 <= mouse_pos[0] and 0 <= mouse_pos[1] <= 38:
-                Rankings_Card = card_ranking(poker_card)
-                if True in Rankings_Card:
-                    for idx, rank in enumerate(Rankings_Card):
-                        if rank == True:
-                            built_tower[-1][2] = idx
-                else:
-                    built_tower[-1][2] = 14
+                Ranking = card_ranking(poker_card)
+                built_tower[-1][2] = Ranking
                 step = 4
-                
+
     for i, j, k in built_tower:
         TOWER_X, TOWER_Y = SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13
         if k in range(15):
             Rankings_Tower[k].show(TOWER_X, TOWER_Y)
         else:
             tower1.show(TOWER_X, TOWER_Y)
-            
+
     for i in range(5):
         CARD_X, CARD_Y = SCREEN_WIDTH//5*i, SCREEN_WIDTH//26*27
         if step < 3:
@@ -152,31 +140,16 @@ while playing:
             unit.append([0,unit_count,attack])
             unit_count+=1
         for i in range(len(unit)):
-            if unit[i][2]<=0:
-                unit[i][0]=-1
+            unit[i][0] = gu.Die(unit, i)
         for i in range(len(unit)):
-            if unit[i][0]!=-1:
-                unit[i][0], player_Rect[i].x, player_Rect[i].y = move(unit[i][0], player_Rect[i])
-                unit[i][0], player_Rect[i].x, player_Rect[i].y, health= change_direction(unit[i][0], player_Rect[i], SCREEN_WIDTH, health)
-                player.show(player_Rect[i].x, player_Rect[i].y)
+            if unit[i][0] != unit_die_num:
+                unit[i][0], health = gu.Move_units(unit, i, player, player_Rect, health)
         for i,j,k in built_tower:
-            for l in range(len(unit)):
-                if (player_Rect[l].x!=SCREEN_WIDTH//26*10-1 or player_Rect[l].y!=0) and unit[l][0]!=-1 and ((player_Rect[l].x-19-j*26)-(player_Rect[l].y-19-i*26))**2<=40**2:
-                    unit[l][2]-=0.01
-                    exp_1.show(26*j+19+0*(player_Rect[l].x-19-26*j)//3,26*i+19+0*(player_Rect[l].y-19-26*i)//3)
-                    exp_2.show(26*j+19+1*(player_Rect[l].x-19-26*j)//3,26*i+19+1*(player_Rect[l].y-19-26*i)//3)
-                    exp_3.show(26*j+19+2*(player_Rect[l].x-19-26*j)//3,26*i+19+2*(player_Rect[l].y-19-26*i)//3)
-                    exp_4.show(26*j+19+3*(player_Rect[l].x-19-26*j)//3,26*i+19+3*(player_Rect[l].y-19-26*i)//3)
-                    break
-        if len(unit)==15 and sorted(unit,key=lambda x : -x[0])[0][0]==-1:
-            step=0
-            unit_count=0
-            unit=[]
-            poker_rand = [0, 0, 0, 0, 0]
-            poker_card = [[0, 0] for i in range(5)]
-            changed = [0 for i in range(5)]
-            player_Rect = [player.rect() for i in range(15)]
-            round+=1
-            unit_health*=1.15
+            gu.Attack_unit(unit, i, j, player_Rect)
+        if len(unit)==15 and sorted(unit,key=lambda x : -x[0])[0][0] == unit_die_num:
+            step, unit_count, unit, poker_rand, poker_card, changed, player_Rect = Startup_setting(player)
+            level += 1
+            unit_health *= 1.15
+            
     pygame.display.flip()
     clock.tick(120)
