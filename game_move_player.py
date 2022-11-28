@@ -1,4 +1,4 @@
-def move(a, player_Rect):
+def Move(a, player_Rect):
     if a % 4 == 0:
         player_Rect.y += 1
     elif a % 4 == 1:
@@ -9,7 +9,7 @@ def move(a, player_Rect):
         player_Rect.x += 1
     return a, player_Rect.x, player_Rect.y
 
-def change_direction(a, player_Rect, SCREEN_WIDTH, health):
+def Change_direction(a, player_Rect, SCREEN_WIDTH, health):
     if player_Rect.bottom > SCREEN_WIDTH//26*24+6 and (a == 0 or a == 4):
         a += 1
         player_Rect.y -= 1
