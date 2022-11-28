@@ -31,7 +31,6 @@ health = 10
 tower_selected = 0
 delay = 0
 attack = 10
-chance = 1
 
 step, unit_count, unit, poker_rand, poker_card, changed, player_Rect = Startup_setting(player)
 level, unit_health = 1, 2500
@@ -113,8 +112,7 @@ while playing:
                             poker_card[idx][0] = shape_
                             poker_card[idx][1] = number_
                             break
-                        
-        
+
         if event.type == pygame.MOUSEBUTTONDOWN and step == 3:
             mouse_pos = pygame.mouse.get_pos()
             if 613 <= mouse_pos[0] and 0 <= mouse_pos[1] <= 38:
