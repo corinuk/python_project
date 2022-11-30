@@ -89,12 +89,13 @@ def Create_Objs():
     player = Objects("Player.png", SCREEN_WIDTH//52, SCREEN_WIDTH//52)
     red_ball = Objects("red.png", SCREEN_WIDTH//52, SCREEN_WIDTH//52)
     blue_ball = Objects("blue.png", SCREEN_WIDTH//52, SCREEN_WIDTH//52)
-    return building_complete, road1, player, red_ball, blue_ball
+    chance = Objects("chance.png", 63, 38)
+    return building_complete, road1, player, red_ball, blue_ball, chance
 
 def Exp():
-    exp_1 = Objects("exp_1.png", SCREEN_WIDTH//52, SCREEN_WIDTH//52)
-    exp_2 = Objects("exp_2.png", SCREEN_WIDTH//52, SCREEN_WIDTH//52)
-    exp_3 = Objects("exp_3.png", SCREEN_WIDTH//52, SCREEN_WIDTH//52)
-    exp_4 = Objects("exp_4.png", SCREEN_WIDTH//52, SCREEN_WIDTH//52)
+    exp_1 = Objects("exp_1.png", SCREEN_WIDTH//90, SCREEN_WIDTH//90)
+    exp_2 = Objects("exp_2.png", SCREEN_WIDTH//80, SCREEN_WIDTH//80)
+    exp_3 = Objects("exp_3.png", SCREEN_WIDTH//70, SCREEN_WIDTH//70)
+    exp_4 = Objects("exp_4.png", SCREEN_WIDTH//60, SCREEN_WIDTH//60)
     exp = [exp_1, exp_2, exp_3, exp_4]
     return exp

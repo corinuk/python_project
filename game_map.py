@@ -1,7 +1,9 @@
 def Map():
     road = []
     tower_available = []
-    for i in range(26):
+    road.append([0,9])
+    road.append([25,12])
+    for i in range(1,25):
         for j in range(25):
             if (i == 2 and (j not in [0, 1, 13, 14, 23, 24])):
                 road.append([i, j])
