@@ -12,7 +12,7 @@ SCREEN_HEIGHT  = 32*26
 pygame.init()
 
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("pygame test")
+pygame.display.set_caption("Poker Defense")
 
 clock = pygame.time.Clock()
 mouse = pygame.mouse.get_pos()
@@ -33,7 +33,8 @@ delay = 0
 attack = 10
 total_power = 0
 step, unit_count, unit, poker_rand, poker_card, changed, player_Rect = Startup_setting(player)
-level, unit_health = 1, 2500
+level, unit_health = 1, 5000
+unit_health_multiply = 1
 unit_die_num = -1
 chances = 1
 
@@ -81,7 +82,6 @@ while playing:
             
         if event.type == pygame.MOUSEBUTTONDOWN and (step == 0 or step == 1):
             mouse_pos = pygame.mouse.get_pos()
-            print(mouse_pos)
             for i, j in tower_available:
                 if 26*j+13 <= mouse_pos[0] <= 26*j+39 and 26*i+13 <= mouse_pos[1] <= 26*i+39:
                     if step == 1:
@@ -160,6 +160,8 @@ while playing:
                 level, unit_health = 1, 2500
                 unit_die_num = -1
                 step=0
+                unit_health_multiply = 1
+                chances = 1
 
     for i, j, k, p in built_tower:
         TOWER_X, TOWER_Y = SCREEN_WIDTH//26*j+13, SCREEN_WIDTH//26*i+13
@@ -193,7 +195,11 @@ while playing:
         if len(unit)==15 and sorted(unit,key=lambda x : -x[0])[0][0] == unit_die_num:
             step, unit_count, unit, poker_rand, poker_card, changed, player_Rect = Startup_setting(player)
             level += 1
-            unit_health *= 1.4
+            unit_health += 5000 * unit_health_multiply
+            unit_health_multiply *= 1.05
+            health += 1
+            if level%5==0:
+                chances+=1
     if step == 5:
         end_load = pygame.image.load("end.png")
         end = pygame.transform.scale(end_load, (SCREEN_WIDTH//2, SCREEN_WIDTH//2))
